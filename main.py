@@ -1,66 +1,30 @@
-import bluetooth
+from bluetooth_connection import BEM
 
-from typing import List
+import kivy
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
 
-from PyOBEX.client import Client
-
-
-class OBEXConnection:
-    def __init__(self, client: Client):
-        self.connection = client
-
-    def __enter__(self):
-        print("Connected!")
-        return self.connection.connect()
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        print("Disconnected!")
-        self.connection.disconnect()
+kivy.require("2.1.0")  # TODO - check if its necessary to do that
 
 
-class BEM:
-    OBEX_ANDROID_PORT: int = 12
+class MyRoot(BoxLayout):
 
-    def __init__(self, devices: List[str]):
-        self._devices = devices
-        self._notified_devices: List[str] = []
+    def __init__(self):
+        super().__init__()
 
-    @property
-    def _nearby_devices(self) -> list:
-        return bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
+    def connect_via_bluetooth(self):
+        devices = [device.strip() for device in self.devices.text.split(",")]
+        file_content = self.file_content.text
+        print(devices, file_content)
+        bem = BEM(devices, file_content)
+        bem.process()
 
-    @staticmethod
-    def get_device_services(address: str) -> None:
-        for service in bluetooth.find_service(address):
-            print(service)
 
-    def get_nearby_devices(self) -> None:
-        print(f"Found: {len(self._nearby_devices)}")
-        for address, name in self._nearby_devices:
-            print(f"{address} - {name}")
-
-    def get_device_addresses(self) -> List[str]:
-        return [address for address, name in self._nearby_devices if name in self._devices]
-
-    def _send_message_file(self, address: str) -> None:
-        client = Client(address, self.OBEX_ANDROID_PORT)
-        with OBEXConnection(client):
-            client.put("test.txt", b"Hello world\n")
-            print("Text file sent!")
-
-    def process(self):
-        while True:
-            addresses = self.get_device_addresses()
-            for address in addresses:
-                if address in self._notified_devices:
-                    continue
-                print(address)
-                self._send_message_file(address)
-            else:
-                break
+class BEMApp(App):
+    def build(self):
+        return MyRoot()
 
 
 if __name__ == "__main__":
-    bluetooth_devices = ["Kacper", "Kacper2", "Y", "OPPO Reno6 5G"]
-    bem = BEM(bluetooth_devices)
-    bem.process()
+    bem_app = BEMApp()
+    bem_app.run()

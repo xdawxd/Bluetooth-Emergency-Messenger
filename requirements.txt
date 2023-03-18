@@ -1,3 +1,4 @@
 PyBluez==0.23
 PyOBEX==0.31
+Kivy==2.1.0
 

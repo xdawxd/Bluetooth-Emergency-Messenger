@@ -1,0 +1,41 @@
+<MyRoot>:
+    devices: devices
+    file_content: file_content
+
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            text: "BEM" # Please put the devices separated by a comma(,) below
+            font_size: 64
+            color: 0.3216, 0.5098, 0.9216, 1
+
+        Label:
+            text: "Please put the devices separated by a comma below"
+            font_size: 32
+            color: 0.3216, 0.5098, 0.9216, 1
+
+        TextInput:
+            id: devices
+            font_size: 32
+            halign: "center"
+
+        Label:
+            text: "File content"
+            font_size: 32
+            color: 0.3216, 0.5098, 0.9216, 1
+
+        TextInput:
+            id: file_content
+            font_size: 32
+            halign: "center"
+
+        Button:
+            text: "Send file"
+            font_size: 32
+            size: 100, 50
+            background_color: 0.3216, 0.5098, 0.9216, 1
+            color: 1, 1, 1, 1
+            on_press: root.connect_via_bluetooth()
+
+
