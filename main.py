@@ -48,7 +48,7 @@ class BEM:
             client.put("test.txt", b"Hello world\n")
             print("Text file sent!")
 
-    def process(self):
+    def process(self) -> None:
         while True:
             addresses = self.get_device_addresses()
             for address in addresses:
@@ -61,6 +61,6 @@ class BEM:
 
 
 if __name__ == "__main__":
-    bluetooth_devices = ["Kacper", "Kacper2", "Y", "OPPO Reno6 5G"]
+    bluetooth_devices = ["Device ID", "Other device ID"]
     bem = BEM(bluetooth_devices)
     bem.process()
